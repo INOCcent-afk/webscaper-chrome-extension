@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import puppeteer from "puppeteer";
+import cors from "cors";
 
 interface Home {
 	price?: string;
@@ -19,6 +20,13 @@ interface Data {
 	app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(bodyParser.json());
 	app.use(express.json());
+	app.use(
+		cors({
+			origin: "http://localhost:3000",
+			methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+			credentials: true,
+		})
+	);
 
 	app.get("/", (req, res) => {
 		res.send({ message: "Ola!" });

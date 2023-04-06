@@ -1,42 +1,82 @@
-import { useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import {
 	getAuth,
-	onAuthStateChanged,
-	signInWithRedirect,
-	createUserWithEmailAndPassword,
 	signOut,
-	sendEmailVerification,
-	signInWithEmailAndPassword,
+	signInWithPopup,
+	onAuthStateChanged,
 } from "firebase/auth";
-
-const data = [
-	{
-		name: "Search Engine",
-		url: [
-			"https://github.com/INOCcent-afk/webscaper-chrome-extension",
-			"https://twitter.com/messages/715768526007611392-1328033777092845570",
-			"https://www.redfin.com/",
-		],
-	},
-];
+import AuthenticatedDashboard from "./components/AuthenticatedDashboard/AuthenticatedDashboard";
+import SignInDashboard from "./components/SignInDashboard/SignInDashboard";
+import "./App.css";
 
 function App() {
-	const onLogin = async (e) => {
-		e.preventDefault();
+	const auth = getAuth();
 
-		try {
-			await signInWithEmailAndPassword(auth, email, password);
-		} catch (error) {
-			console.log(JSON.stringify(error));
+	const [stateAuth, setStateAuth] = useState(
+		false || window.localStorage.getItem("auth") === "true"
+	);
+	const [user, setUser] = useState<User | null>(null);
+	const [token, setToken] = useState<String | null>();
+	const [scrapeCount, setScrapeCount] = useState(
+		Number(window.localStorage.getItem("scrapeCount") || 0)
+	);
+
+	const loginWithGoogle = async () => {
+		const provider = new firebase.auth.GoogleAuthProvider();
+
+		const result = await signInWithPopup(auth, provider);
+
+		if (result) {
+			const tokenId = await result.user.getIdToken();
+
+			setUser({
+				displayName: result.user.displayName,
+				photoURL: result.user.photoURL,
+				uid: result.user.uid,
+			});
+			setToken(tokenId);
+
+			window.localStorage.setItem("auth", "true");
 		}
+	};
+
+	useEffect(() => {
+		onAuthStateChanged(auth, async (userCredentials) => {
+			if (userCredentials) {
+				setUser({
+					displayName: userCredentials.displayName,
+					photoURL: userCredentials.photoURL,
+					uid: userCredentials.uid,
+				});
+				setStateAuth(true);
+				window.localStorage.setItem("auth", "true");
+				const token = await userCredentials.getIdToken();
+
+				console.log(userCredentials);
+
+				setToken(token);
+			}
+		});
+	}, []);
+
+	const increaseScrapeCount = () => {
+		setScrapeCount((prevCount) => prevCount + 1);
+		window.localStorage.setItem("scrapeCount", String(scrapeCount + 1));
 	};
 
 	return (
 		<div className="App">
-			<button>Sign In</button>
+			{stateAuth ? (
+				<AuthenticatedDashboard
+					user={user}
+					scrapeCount={scrapeCount}
+					setScrapeCount={increaseScrapeCount}
+				/>
+			) : (
+				<SignInDashboard loginWithGoogle={loginWithGoogle} />
+			)}
 		</div>
 	);
 }

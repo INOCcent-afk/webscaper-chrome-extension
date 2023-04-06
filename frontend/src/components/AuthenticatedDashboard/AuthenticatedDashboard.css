@@ -1,0 +1,76 @@
+.dashboard {
+	min-width: 600px;
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+.dashboard-input {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid #f3f3f3;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.dashboard-input input {
+	background-color: #f3f3f3;
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 11px;
+	color: black;
+	flex-basis: 60%;
+	font-weight: bold;
+}
+
+table {
+	margin: 16px 0;
+	max-width: 600px;
+}
+th {
+	padding-bottom: 16px;
+}
+
+tbody {
+	padding-top: 16px;
+}
+
+td {
+	color: #f3f3f3;
+	padding: 16px 8px;
+	border: 1px solid #f3f3f3;
+	text-align: center;
+}
+
+.export-csv {
+	background-color: #ff9900 !important;
+	color: black !important;
+	font-size: 16px;
+	margin: 16px 0;
+	letter-spacing: unset !important;
+	text-align: center;
+	text-decoration: none;
+}
+
+.dashboard-error {
+	width: 100%;
+	background-color: maroon;
+	color: white;
+	border-radius: 8px;
+}
+
+.dashboard-error button {
+	background-color: transparent;
+	border: none;
+	color: white;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.dashboard-error p {
+	text-align: center;
+}
