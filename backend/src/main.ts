@@ -22,7 +22,7 @@ interface Data {
 	app.use(express.json());
 	app.use(
 		cors({
-			origin: "http://localhost:3000",
+			origin: "http://localhost:3001",
 			methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
 			credentials: true,
 		})
@@ -37,9 +37,7 @@ interface Data {
 
 		try {
 			if (!place)
-				return res
-					.status(400)
-					.send({ message: "payload `place` is missing" });
+				return res.status(400).send({ message: "payload `place` is missing" });
 
 			const browser = await puppeteer.launch();
 			const page = await browser.newPage();
@@ -55,9 +53,7 @@ interface Data {
 			await page.click(searchResultSelector);
 
 			// Locate the full title with a unique string
-			const textSelector = await page.waitForSelector(
-				".collapsedListView"
-			);
+			const textSelector = await page.waitForSelector(".collapsedListView");
 			const pageTitle =
 				(await textSelector?.evaluate((el) => el.textContent)) || "";
 
@@ -77,8 +73,7 @@ interface Data {
 
 				for (const stat of stats) {
 					const statData =
-						(await stat?.evaluate((node) => node.textContent)) ||
-						"";
+						(await stat?.evaluate((node) => node.textContent)) || "";
 					homeData.stats?.push(statData);
 				}
 
@@ -86,8 +81,7 @@ interface Data {
 
 				if (address) {
 					const addressData =
-						(await address.evaluate((node) => node.textContent)) ||
-						"";
+						(await address.evaluate((node) => node.textContent)) || "";
 
 					homeData.address = addressData;
 				}
@@ -96,8 +90,7 @@ interface Data {
 
 				if (price) {
 					const priceData =
-						(await price.evaluate((node) => node.textContent)) ||
-						"";
+						(await price.evaluate((node) => node.textContent)) || "";
 
 					homeData.price = priceData;
 				}

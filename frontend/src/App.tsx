@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import {
-	getAuth,
-	signOut,
-	signInWithPopup,
-	onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import AuthenticatedDashboard from "./components/AuthenticatedDashboard/AuthenticatedDashboard";
 import SignInDashboard from "./components/SignInDashboard/SignInDashboard";
 import "./App.css";
@@ -50,11 +45,10 @@ function App() {
 					photoURL: userCredentials.photoURL,
 					uid: userCredentials.uid,
 				});
+
 				setStateAuth(true);
 				window.localStorage.setItem("auth", "true");
 				const token = await userCredentials.getIdToken();
-
-				console.log(userCredentials);
 
 				setToken(token);
 			}
